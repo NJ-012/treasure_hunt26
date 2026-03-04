@@ -1,0 +1,138 @@
+@import url('https://fonts.googleapis.com/css2?family=Calistoga&family=Outfit:wght@400;600;800&display=swap');
+
+:root {
+  --font-heading: 'Calistoga', serif;
+  --font-body: 'Outfit', sans-serif;
+  --font-mono: 'Courier Prime', monospace;
+
+  /* Playful Adventure Map Palette based on image */
+  --color-bg-primary: #e6f0c8;
+  --color-bg-secondary: #d4e7a0;
+  --color-bg-card: #ffffff;
+
+  --color-green: #256130;
+  --color-green-dim: #1e4b25;
+  --color-green-light: #528c5a;
+
+  --color-brown: #8d5225;
+  --color-brown-dim: #6d3e1a;
+  --color-brown-light: #be753d;
+
+  --color-red: #bb4129;
+  --color-blue: #6ebad8;
+
+  --color-text-primary: #256130;
+  --color-text-secondary: #1e4b25;
+
+  font-family: var(--font-body);
+  line-height: 1.6;
+  font-weight: 400;
+  color-scheme: light;
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-bg-primary);
+  /* Subtle dot pattern for the map ground */
+  background-image: radial-gradient(var(--color-bg-secondary) 2px, transparent 2px);
+  background-size: 24px 24px;
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  letter-spacing: 0.02em;
+  color: var(--color-green);
+  margin: 0;
+}
+
+input,
+textarea {
+  font-family: var(--font-body);
+}
+
+button {
+  background: var(--color-brown);
+  border: 3px solid var(--color-brown-dim);
+  border-radius: 12px;
+  padding: 0.8em 1.5em;
+  font-size: 1.1rem;
+  font-family: var(--font-heading);
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  letter-spacing: 1px;
+  box-shadow: 4px 4px 0px var(--color-brown-dim);
+  text-transform: uppercase;
+}
+
+button:hover:not(:disabled) {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px var(--color-brown-dim);
+  background-color: #9c5c2a;
+}
+
+button:active:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px var(--color-brown-dim);
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 4px 4px 0px var(--color-brown-dim);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-green-light);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-green);
+}
+
+/* ── Utility keyframes ─────────────────────────────────── */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}

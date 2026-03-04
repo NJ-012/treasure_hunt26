@@ -1,0 +1,65 @@
+name: Deploy Backend to HuggingFace Spaces
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'Treasure_Hunt_Backend/**'
+
+jobs:
+  deploy-to-hf:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Push to HuggingFace Spaces (Orphan Branch)
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_SPACE: ${{ secrets.HF_SPACE }}
+        run: |
+          # Configure git
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "GitHub Actions"
+
+          # Create a temporary directory with ONLY backend files
+          mkdir -p /tmp/hf-deploy
+          
+          # Copy backend source (no node_modules, no .env, no uploads)
+          cp -r Treasure_Hunt_Backend/src /tmp/hf-deploy/src
+          cp Treasure_Hunt_Backend/package.json /tmp/hf-deploy/
+          cp Treasure_Hunt_Backend/package-lock.json /tmp/hf-deploy/
+          cp Treasure_Hunt_Backend/Dockerfile /tmp/hf-deploy/
+          cp Treasure_Hunt_Backend/.dockerignore /tmp/hf-deploy/
+          
+          # Create HF-required README.md at root
+          cat > /tmp/hf-deploy/README.md << 'EOF'
+          ---
+          title: Treasure Hunt Backend
+          emoji: 🏴‍☠️
+          colorFrom: green
+          colorTo: yellow
+          sdk: docker
+          pinned: false
+          ---
+          
+          Treasure Hunt 2026 — Backend API
+          EOF
+          
+          # Remove leading whitespace from README (heredoc indent)
+          sed -i 's/^          //' /tmp/hf-deploy/README.md
+
+          # Initialize fresh orphan repo (no history = no large file issues)
+          cd /tmp/hf-deploy
+          git init
+          git checkout --orphan main
+          git add .
+          git commit -m "Deploy backend $(date +'%Y-%m-%d %H:%M')"
+
+          # Push to HuggingFace Space
+          git remote add hf https://user:${HF_TOKEN}@huggingface.co/spaces/${HF_SPACE}
+          git push hf main --force
+
+          echo "✅ Deployed to https://huggingface.co/spaces/${HF_SPACE}"
