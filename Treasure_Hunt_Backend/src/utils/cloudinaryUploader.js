@@ -70,10 +70,9 @@ export const uploadToCloudinary = async (fileBuffer, folder = 'treasure_hunt') =
             {
                 folder,
                 resource_type: 'image',
-                quality: 'auto:low',      // Cloudinary auto-compresses
                 format: 'jpg',            // Convert to jpg for consistency
                 transformation: [
-                    { width: 1200, crop: 'limit' },  // Max width 1200px
+                    { width: 1200, crop: 'limit', quality: 'auto:low' },
                 ],
             },
             (error, result) => {
