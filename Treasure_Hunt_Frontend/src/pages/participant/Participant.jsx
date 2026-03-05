@@ -106,6 +106,12 @@ const Participant = () => {
           if (response.question_number) setQuestionNumber(prev => Math.max(prev, response.question_number));
           setCompletedBonus(response.completed_bonus || 0);
         } else if (response.completed) {
+          if (isBonus) {
+            setError('No more bonus questions available on this path!');
+            setIsBonusMode(false);
+            fetchCurrentQuestion(false);
+            return;
+          }
           setCurrentQuestion({ completed: true });
         } else {
           setError('No question available');
@@ -204,8 +210,12 @@ const Participant = () => {
       if (image) formData.append('image', image);
       const response = await submitAnswer(currentQuestion.id, formData);
       if (response.success) {
-        if (currentQuestion.is_bonus) setCompletedBonus(prev => prev + 1);
-        setQuestionNumber(prev => prev + 1);
+        if (currentQuestion.is_bonus) {
+          setCompletedBonus(prev => prev + 1);
+          setIsBonusMode(false);
+        } else {
+          setQuestionNumber(prev => prev + 1);
+        }
         setSuccess('✨ Answer logged in the admin panel!');
         setTextAnswer('');
         setImage(null);

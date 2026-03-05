@@ -222,13 +222,23 @@ export const getCurrentQuestion = async (req, res) => {
     `;
     const tableExists = await pool.query(tableCheckQuery, [`user_answers_${username}`]);
 
-    // 3. Get answered count for question numbering
-    let answeredCount = 0;
+    // Check if requesting bonus question
+    const isBonusReq = req.query.is_bonus === 'true';
+    const pointCondition = isBonusReq ? 'qb.points = 15' : 'qb.points != 15';
+
+    // 3. Get answered count for normal vs bonus questions
+    let normalAnsweredCount = 0;
+    let bonusAnsweredCount = 0;
     if (tableExists.rows[0].exists) {
       const answeredResult = await pool.query(
-        `SELECT COUNT(*) FROM "user_answers_${username}"`
+        `SELECT 
+          SUM(CASE WHEN qb.points != 15 THEN 1 ELSE 0 END) as normal_count,
+          SUM(CASE WHEN qb.points = 15 THEN 1 ELSE 0 END) as bonus_count
+         FROM "user_answers_${username}" ua
+         JOIN question_bank qb ON ua.question_id = qb.id`
       );
-      answeredCount = parseInt(answeredResult.rows[0].count);
+      normalAnsweredCount = parseInt(answeredResult.rows[0].normal_count || 0);
+      bonusAnsweredCount = parseInt(answeredResult.rows[0].bonus_count || 0);
     }
 
     let questionResult;
@@ -238,6 +248,7 @@ export const getCurrentQuestion = async (req, res) => {
         `SELECT qa.id as assignment_id, qb.* FROM question_assignments qa
            JOIN question_bank qb ON qa.question_id = qb.id
            WHERE qa.user_id = $1
+           AND ${pointCondition}
            AND NOT EXISTS (
              SELECT 1 
              FROM "user_answers_${username}" ua 
@@ -252,6 +263,7 @@ export const getCurrentQuestion = async (req, res) => {
         `SELECT qa.id as assignment_id, qb.* FROM question_assignments qa
            JOIN question_bank qb ON qa.question_id = qb.id
            WHERE qa.user_id = $1
+           AND ${pointCondition}
            ORDER BY qa.id
            LIMIT 1`,
         [userId]
@@ -268,8 +280,9 @@ export const getCurrentQuestion = async (req, res) => {
 
     res.json({
       success: true,
-      question: questionResult.rows[0],
-      question_number: answeredCount + 1,
+      question: { ...questionResult.rows[0], is_bonus: isBonusReq },
+      question_number: isBonusReq ? bonusAnsweredCount + 1 : normalAnsweredCount + 1,
+      completed_bonus: bonusAnsweredCount,
       // Per-question time limit in seconds (5 minutes per question)
       time_limit: 300
     });

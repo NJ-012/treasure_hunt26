@@ -1,8 +1,10 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-const BonusQuestionHandler = ({ questionNumber, onSwitchToBonus, onSwitchToNormal, isBonusMode }) => {
-  if (questionNumber !== 5 && questionNumber !== 10 && !isBonusMode) return null;
+const BonusQuestionHandler = ({ questionNumber, onSwitchToBonus, onSwitchToNormal, isBonusMode, completedBonus }) => {
+  const availableBonuses = Math.floor((questionNumber - 1) / 10);
+
+  if (completedBonus >= availableBonuses && !isBonusMode) return null;
 
   return (
     <div style={{ marginBottom: '1.5rem', width: '100%', textAlign: 'center', position: 'relative', zIndex: 1, padding: '0 0.5rem' }}>
