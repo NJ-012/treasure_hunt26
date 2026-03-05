@@ -86,6 +86,10 @@ const Participant = () => {
   const [isBonusMode, setIsBonusMode] = useState(false);
   const [completedBonus, setCompletedBonus] = useState(0);
 
+  const [eventNotStarted, setEventNotStarted] = useState(false);
+  const [eventStartTime, setEventStartTime] = useState(null);
+  const [timeLeft, setTimeLeft] = useState({ obj: null, str: '' });
+
   useEffect(() => { fetchCurrentQuestion(false); }, []);
 
   const fetchCurrentQuestion = async (isBonus = false) => {
@@ -105,6 +109,11 @@ const Participant = () => {
           });
           if (response.question_number) setQuestionNumber(prev => Math.max(prev, response.question_number));
           setCompletedBonus(response.completed_bonus || 0);
+          setEventNotStarted(false);
+        } else if (response.not_started) {
+          setEventNotStarted(true);
+          setEventStartTime(response.event_start);
+          setCurrentQuestion(null);
         } else if (response.completed) {
           if (isBonus) {
             setError('No more bonus questions available on this path!');
@@ -125,6 +134,41 @@ const Participant = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    let timer;
+    if (eventNotStarted && eventStartTime) {
+      const targetDate = new Date(eventStartTime);
+      const updateTimer = () => {
+        const now = new Date();
+        const diff = targetDate - now;
+        if (diff <= 0) {
+          clearInterval(timer);
+          setEventNotStarted(false);
+          fetchCurrentQuestion(false); // Fetch questions now that event started
+        } else {
+          const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+          const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+          const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+          let parts = [];
+          if (d > 0) parts.push(`${d}d`);
+          if (d > 0 || h > 0) parts.push(`${h}h`);
+          parts.push(`${m}m`);
+          parts.push(`${s}s`);
+
+          setTimeLeft({
+            obj: { d, h, m, s },
+            str: parts.join(' ')
+          });
+        }
+      };
+      updateTimer();
+      timer = setInterval(updateTimer, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [eventNotStarted, eventStartTime]);
 
   // Compress image using canvas — returns a File under targetSize
   const compressImage = (file, maxWidth = 1200, quality = 0.7, targetSizeMB = 2) => {
@@ -276,6 +320,42 @@ const Participant = () => {
 
   /* ─── Completion state ──── */
   if (currentQuestion?.completed) return <CompletionScreen />;
+
+  /* ─── Event Not Started state ──── */
+  if (eventNotStarted) {
+    return (
+      <div className="flex-col-center" style={{ flex: 1, position: 'relative', padding: '2rem' }}>
+        <DottedPath />
+        <motion.div
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          className="adventure-card"
+          style={{ textAlign: 'center', maxWidth: 400, border: '3px solid var(--color-green)' }}
+        >
+          <span style={{ fontSize: '3rem', display: 'block', marginBottom: '0.8rem', animation: 'spin 10s linear infinite' }}>⏳</span>
+          <h2 style={{ fontSize: '1.6rem', color: 'var(--color-green)', marginBottom: '0.5rem', fontFamily: 'var(--font-heading)' }}>
+            THE VOYAGE BEGINS SOON
+          </h2>
+          <p style={{ color: 'var(--color-brown)', fontWeight: 600, fontSize: '1rem', marginBottom: '1.5rem', fontFamily: 'var(--font-body)' }}>
+            Hold tight, explorer. Your treasure map is still being charted.
+          </p>
+
+          <div style={{
+            background: 'var(--color-bg-primary)',
+            padding: '1.2rem',
+            borderRadius: '12px',
+            border: '2px dashed var(--color-green-light)',
+            display: 'inline-block'
+          }}>
+            <div style={{ fontSize: '0.8rem', color: 'var(--color-green)', letterSpacing: 2, marginBottom: '0.5rem', fontWeight: 800 }}>STARTS IN</div>
+            <div style={{ fontSize: '2rem', fontFamily: 'var(--font-heading)', color: 'var(--color-red)', letterSpacing: '1px' }}>
+              {timeLeft.str || "Loading..."}
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    );
+  }
 
   /* ─── No question found ──── */
   if (!currentQuestion) {

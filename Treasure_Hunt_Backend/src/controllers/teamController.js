@@ -182,16 +182,16 @@ export const getCurrentQuestion = async (req, res) => {
     const { id: userId, username } = req.user;
 
     // ── EVENT START GATE — DISABLED FOR TESTING ──
-    // const EVENT_START = new Date('2026-03-06T05:30:00.000Z');
-    // const now = new Date();
-    // if (now < EVENT_START) {
-    //   return res.json({
-    //     success: true,
-    //     not_started: true,
-    //     event_start: EVENT_START.toISOString(),
-    //     message: 'The treasure hunt has not started yet!'
-    //   });
-    // }
+    const EVENT_START = new Date('2026-03-06T05:30:00.000Z');
+    const now = new Date();
+    if (now < EVENT_START) {
+      return res.json({
+        success: true,
+        not_started: true,
+        event_start: EVENT_START.toISOString(),
+        message: 'The treasure hunt has not started yet!'
+      });
+    }
 
     // 1. AUTO-ASSIGNMENT: If user has no questions, assign ALL questions in random order
     const checkAssignments = await pool.query(
