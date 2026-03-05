@@ -97,6 +97,21 @@ const AnswerForm = ({ textAnswer, onTextChange, onImageChange, imagePreview, req
             </span>
           )}
         </label>
+        {requiresImage && (
+          <p style={{
+            fontSize: '0.8rem',
+            color: 'var(--color-red)',
+            marginBottom: '0.8rem',
+            fontFamily: 'var(--font-body)',
+            fontWeight: 700,
+            fontStyle: 'italic',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px'
+          }}>
+            ⚠️ Please ensure the participant is clearly visible in the photo.
+          </p>
+        )}
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
           {/* Upload area */}
