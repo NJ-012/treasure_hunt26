@@ -97,7 +97,7 @@ const Login = () => {
                 fontSize: '1rem'
               }}
             >
-              {r === 'admin' ? 'Captain' : 'Participant'}
+              {r === 'admin' ? 'Admin' : 'Participant'}
             </button>
           ))}
         </div>

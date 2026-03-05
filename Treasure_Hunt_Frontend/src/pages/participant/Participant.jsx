@@ -206,7 +206,7 @@ const Participant = () => {
       if (response.success) {
         if (currentQuestion.is_bonus) setCompletedBonus(prev => prev + 1);
         setQuestionNumber(prev => prev + 1);
-        setSuccess('✨ Answer logged in the captain\'s journal!');
+        setSuccess('✨ Answer logged in the admin panel!');
         setTextAnswer('');
         setImage(null);
         setImagePreview(null);

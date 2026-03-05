@@ -90,7 +90,7 @@ const Header = ({ isAdmin = false }) => {
             <CompassSVG size={36} />
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <span style={{ fontFamily: 'var(--font-heading)', fontSize: '0.85rem', color: 'var(--color-green)', letterSpacing: 2 }}>
-                CAPTAIN'S CABIN
+                ADMIN PANEL
               </span>
               <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.7rem', color: 'var(--color-brown)', fontWeight: 800, letterSpacing: 1 }}>
                 ADMIN COMMAND CENTER
