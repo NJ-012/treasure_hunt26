@@ -14,9 +14,9 @@ export const registerUser = async (req, res) => {
     );
 
     if (role === 'participant') {
-      // Get 10 random questions
+      // Get all random questions
       const questions = await pool.query(
-        'SELECT id FROM question_bank ORDER BY RANDOM() LIMIT 10'
+        'SELECT id FROM question_bank ORDER BY RANDOM()'
       );
 
       // Assign questions to user
@@ -102,9 +102,9 @@ export const loginUser = async (req, res) => {
       );
 
       if (assignedQuestions.rows[0].count === 0) {
-        // Get 10 random questions
+        // Get all random questions
         const questions = await pool.query(
-          'SELECT id FROM question_bank ORDER BY RANDOM() LIMIT 10'
+          'SELECT id FROM question_bank ORDER BY RANDOM()'
         );
 
         // Assign questions to user
