@@ -36,7 +36,7 @@ export const initializeTables = async () => {
 RETURNS void AS $$
 BEGIN
   EXECUTE format('
-    CREATE TABLE IF NOT EXISTS user_answers_%I (
+    CREATE TABLE IF NOT EXISTS %I (
       id SERIAL PRIMARY KEY,
       question_id INTEGER NOT NULL,
       text_answer TEXT,
@@ -48,7 +48,7 @@ BEGIN
       reviewed_by INTEGER REFERENCES users(id),
       admin_feedback TEXT,
       FOREIGN KEY (question_id) REFERENCES question_bank(id)
-    )', username);
+    )', 'user_answers_' || username);
       END;
       $$ LANGUAGE plpgsql;
 
