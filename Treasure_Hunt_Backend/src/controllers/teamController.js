@@ -182,7 +182,7 @@ export const getCurrentQuestion = async (req, res) => {
     const { id: userId, username } = req.user;
 
     // ── EVENT START GATE ──
-    const EVENT_START = new Date('2026-03-06T11:35:00+05:30');
+    const EVENT_START = new Date('2026-03-06T11:50:00+05:30');
     const now = new Date();
     if (now < EVENT_START) {
       return res.json({
