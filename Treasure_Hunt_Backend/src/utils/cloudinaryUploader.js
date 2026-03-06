@@ -41,13 +41,12 @@ const initConfigs = () => {
     console.log(`☁️  Loaded ${configs.length} Cloudinary account(s)`);
 };
 
-// Get next config (round-robin)
-const getNextConfig = () => {
+// Get a random config to ensure load balancing across accounts
+const getRandomConfig = () => {
     initConfigs();
     if (configs.length === 0) throw new Error('No Cloudinary configs available');
-    const config = configs[currentIndex % configs.length];
-    currentIndex++;
-    return config;
+    const randomIndex = Math.floor(Math.random() * configs.length);
+    return configs[randomIndex];
 };
 
 /**
@@ -57,7 +56,7 @@ const getNextConfig = () => {
  * @returns {Promise<string>} - The secure URL of the uploaded image
  */
 export const uploadToCloudinary = async (fileBuffer, folder = 'treasure_hunt') => {
-    const config = getNextConfig();
+    const config = getRandomConfig();
 
     cloudinary.config({
         cloud_name: config.cloud_name,
