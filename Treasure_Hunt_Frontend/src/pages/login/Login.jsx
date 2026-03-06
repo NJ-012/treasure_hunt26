@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { loginUser, registerUser } from "../../services/api";
 
 const Login = () => {
-  const [isLogin, setIsLogin] = useState(true);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("participant");
@@ -17,9 +16,7 @@ const Login = () => {
     setLoading(true);
     setError("");
     try {
-      const response = isLogin
-        ? await loginUser({ username, password })
-        : await registerUser({ username, password, role });
+      const response = await loginUser({ username, password });
       if (response.success) {
         localStorage.setItem("token", response.token);
         localStorage.setItem("userRole", response.user.role);
@@ -72,7 +69,7 @@ const Login = () => {
       >
         <div className="flex-col-center" style={{ marginBottom: '1.5rem', textAlign: 'center' }}>
           <h2 style={{ fontSize: '2.2rem', lineHeight: 1.1, marginBottom: '0.4rem' }}>
-            {isLogin ? "WELCOME EXPLORER" : "ENLIST NOW"}
+            WELCOME EXPLORER
           </h2>
           <p style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--color-green-light)', margin: 0 }}>
             Are you up for the challenge?
@@ -129,18 +126,9 @@ const Login = () => {
             style={{ padding: '1rem', borderRadius: '12px', border: '3px solid var(--color-green)', fontSize: '1.1rem', fontWeight: 'bold', outline: 'none', background: 'var(--color-bg-primary)', color: 'var(--color-green)' }}
           />
           <button type="submit" disabled={loading} style={{ marginTop: '0.8rem', fontSize: '1.2rem', padding: '1rem' }}>
-            {loading ? "VERIFYING..." : (isLogin ? "START ADVENTURE" : "JOIN CREW")}
+            {loading ? "VERIFYING..." : "START ADVENTURE"}
           </button>
         </form>
-
-        <div style={{ textAlign: 'center', marginTop: '1.5rem' }}>
-          <span
-            onClick={() => { setIsLogin(!isLogin); setError(""); }}
-            style={{ color: 'var(--color-brown)', fontWeight: 800, cursor: 'pointer', fontSize: '1rem', textDecoration: 'underline' }}
-          >
-            {isLogin ? "New Explorer? Enlist Here!" : "Already Enlisted? Resume Journey!"}
-          </span>
-        </div>
 
       </motion.div>
     </div>

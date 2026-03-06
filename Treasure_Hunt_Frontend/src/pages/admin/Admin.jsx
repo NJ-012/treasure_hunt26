@@ -4,6 +4,7 @@ import QuestionPanel from './components/QuestionPanel';
 import TeamPanel from './components/TeamPanel';
 import ResultPanel from './components/ResultPanel';
 import ViewQuestions from './components/ViewQuestions';
+import AddUserPanel from './components/AddUserPanel';
 
 /* ── SVG decorations ──────────────────────────────────────── */
 const MapX = ({ size = 48, style = {} }) => (
@@ -53,6 +54,7 @@ const TAB_META = [
   { id: 'View Questions', label: 'View Questions', icon: '📜', desc: 'Edit & remove clues' },
   { id: 'Teams', label: 'Teams', icon: '🏴‍☠️', desc: 'Review submissions' },
   { id: 'Results', label: 'Results', icon: '🏆', desc: 'Leaderboard & export' },
+  { id: 'Add User', label: 'Add User', icon: '🧑‍🤝‍🧑', desc: 'Manage players' },
 ];
 
 const Admin = () => {
@@ -163,6 +165,7 @@ const Admin = () => {
                 {activeTab === 'View Questions' && <ViewQuestions />}
                 {activeTab === 'Teams' && <TeamPanel />}
                 {activeTab === 'Results' && <ResultPanel />}
+                {activeTab === 'Add User' && <AddUserPanel />}
               </motion.div>
             </AnimatePresence>
           </div>
