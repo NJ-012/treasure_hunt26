@@ -71,7 +71,7 @@ const CompletionScreen = () => {
             WebkitTextFillColor: 'transparent',
           }}
         >
-          TREASURE SECURED!
+          TREASURE HAS BEEN FOUND!
         </motion.h1>
 
         <motion.div
@@ -98,7 +98,7 @@ const CompletionScreen = () => {
             lineHeight: 1.6,
           }}
         >
-          Congratulations, Explorer! You&apos;ve conquered every clue and secured your legend in Ambiora 2026.
+          Thank you for participating! The treasure has been found, and results will be announced on Ambiora socials.
         </motion.p>
 
         <motion.div
@@ -114,10 +114,10 @@ const CompletionScreen = () => {
           }}
         >
           <div style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--color-green)', letterSpacing: '1px', marginBottom: 4 }}>
-            YOUR JOURNEY
+            THE HUNT IS OVER
           </div>
           <div style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--color-brown)' }}>
-            All clues discovered • All answers submitted
+            Stay tuned to @ambiora on socials!
           </div>
         </motion.div>
 

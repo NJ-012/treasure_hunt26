@@ -193,6 +193,16 @@ export const getCurrentQuestion = async (req, res) => {
       });
     }
 
+    // ── EVENT CLOSED GATE ──
+    const EVENT_CLOSED = true; // Hard stop
+    if (EVENT_CLOSED) {
+      return res.json({
+        success: true,
+        completed: true,
+        message: 'The hunt is over! The Treasure has been found.'
+      });
+    }
+
     // 1. AUTO-ASSIGNMENT: If user has no questions, assign ALL questions in random order
     const checkAssignments = await pool.query(
       'SELECT COUNT(*) FROM question_assignments WHERE user_id = $1',
